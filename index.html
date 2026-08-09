@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Acceso | Nexus</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="estilo1.css">
+</head>
+<body>
+    
+    <canvas id="particles-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></canvas>
+    
+    <div class="tema-flotante" id="contenedor-tema-login">
+        <button class="btn-icon-tema" id="btn-tema" title="Cambiar Tema">
+            <i class='bx bx-moon'></i>
+        </button>
+    </div>
+
+    <div id="login-container">
+        <h2 style="display: flex; flex-direction: column; align-items: center; line-height: 1.1; margin-top: 20px; margin-bottom: 30px;">
+            <i class="bx bx-radar bx-burst" style="color: var(--primary); font-size: 2.8rem; text-shadow: 0 0 15px rgba(99, 102, 241, 0.4); margin-bottom: 8px;"></i> 
+            <span style="font-size: 1.8rem; letter-spacing: 0.5px; color: var(--text-main); font-weight: 800;">Multimedia TV</span>
+            <span style="font-size: 0.9rem; color: var(--primary); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px;">Admin</span>
+        </h2>
+        <form id="login-form">
+            <div>
+                <label for="login-usuario">Usuario / Correo:</label>
+                <input type="text" id="login-usuario" required="" placeholder="Ej: admin o tu correo" spellcheck="false" autocomplete="off">
+            </div>
+            <div>
+                <label for="login-clave">Contraseña:</label>
+                <input type="password" id="login-clave" required="" placeholder="Tu contraseña de acceso">
+            </div>
+            <div style="margin-top: 25px;">
+                <button type="submit" id="btn-ingresar">Ingresar</button>
+            </div>
+        </form>
+        <div id="login-mensaje-error"></div>
+        
+        <div style="text-align: center; margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px; font-size: 0.75rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; line-height: 1.5;">
+            Desarrollado por <strong style="color: var(--text-main);">Brallan Ariza</strong> &copy; 2026. Todos los derechos reservados.
+        </div>
+    </div>
+
+    <div id="admin-container" style="display: none;">
+        
+        <button id="btn-menu-hamburguesa"><i class="bx bx-menu"></i></button>
+
+        <div id="sidebar-overlay" onclick="document.getElementById('admin-sidebar').classList.remove('activo'); this.classList.remove('activo');"></div>
+
+        <nav id="admin-sidebar">
+            <button id="btn-cerrar-menu" onclick="document.getElementById('admin-sidebar').classList.remove('activo'); document.getElementById('sidebar-overlay').classList.remove('activo');"><i class="bx bx-x"></i></button>
+
+            <div style="padding: 25px 30px 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+                <h3 style="color: white; font-weight: 600; margin: 0; display: flex; align-items: flex-start; gap: 10px;">
+                    <i class="bx bx-radar bx-burst" style="color: var(--primary); font-size: 1.6rem; margin-top: 2px; text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);"></i> 
+                    <div style="display: flex; flex-direction: column; line-height: 1.1;">
+                        <span style="font-size: 1.15rem; letter-spacing: 0.5px;">Multimedia TV</span>
+                        <span style="font-size: 0.75rem; color: var(--primary); font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 3px;">Admin</span>
+                    </div>
+                </h3>
+                <span style="color: #64748b; font-size: 0.75rem; font-weight: 600; margin-left: 32px; display: block; margin-top: 4px; letter-spacing: 0.05em;">Versión 1.0.1</span>
+
+                
+                <button id="btn-toggle-sidebar" class="btn-hamburguesa-interior">
+                    <i class="bx bx-menu"></i>
+                </button>
+            </div>
+            
+            <ul class="nav-links">
+                <li><button id="nav-inicio"><i class="bx bx-home-alt"></i> Inicio</button></li>
+                
+                <li style="display: none;"><button id="nav-busqueda"><i class="bx bx-search"></i> Búsqueda General</button></li>
+                
+                <li><button id="nav-cuentas"><i class="bx bx-envelope"></i> Gestión de Cuentas</button></li>
+                
+                <li><button id="nav-bandeja-general" onclick="if(typeof cargarBandejaGeneral === 'function') cargarBandejaGeneral(); else alert('Módulo Bandeja General en construcción');"><i class="bx bx-envelope-open"></i> Bandeja General</button></li>
+                
+                <li>
+                    <button id="nav-lista-clientes" style="display: flex; justify-content: space-between; align-items: center; width: 100%;" onclick="if(typeof toggleSubmenuClientes === 'function') toggleSubmenuClientes(); else alert('Módulo de trabajadores no cargado');">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="bx bx-group"></i> Lista Trabajadores
+                        </div>
+                        <i class='bx bx-chevron-down' id="icono-flecha-clientes" style="transition: transform 0.3s ease;"></i>
+                    </button>
+                    <ul id="submenu-clientes" style="display: none; list-style: none; padding: 0; margin: 0; background: rgba(0,0,0,0.15);">
+                        </ul>
+                </li>
+
+                <li>
+                    <button id="nav-lista-categorias" style="display: flex; justify-content: space-between; align-items: center; width: 100%;" onclick="if(typeof toggleSubmenuCategorias === 'function') toggleSubmenuCategorias(); else alert('Módulo de categorías no cargado');">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="bx bx-layer"></i> Categorías
+                        </div>
+                        <i class='bx bx-chevron-down' id="icono-flecha-categorias" style="transition: transform 0.3s ease;"></i>
+                    </button>
+                    <ul id="submenu-categorias" style="display: none; list-style: none; padding: 0; margin: 0; background: rgba(0,0,0,0.15);">
+                        </ul>
+                </li>
+                
+                <li><button id="nav-registros"><i class="bx bx-list-ul"></i> Registros</button></li>
+
+                <!-- <li><button id="nav-filtros"><i class="bx bx-filter-alt"></i> Filtros</button></li> -->
+                
+                <li style="margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.05);">
+                    
+                    <div id="sidebar-user-box" style="display: flex; align-items: center; gap: 12px; padding: 10px 20px; margin-bottom: 5px; background: rgba(0,0,0,0.2); margin: 0 10px 10px 10px; border-radius: 12px;">
+                        <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 1.2rem; flex-shrink: 0;">
+                            <i class='bx bx-user'></i>
+                        </div>
+                        <div style="overflow: hidden;">
+                            <div id="sidebar-user-name" style="color: #f8fafc; font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2;">Cargando...</div>
+                            <div id="sidebar-user-rol" style="color: #10b981; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; margin-top: 3px; letter-spacing: 0.05em;">ROL</div>
+                        </div>
+                    </div>                </li>
+                
+                <li><button id="btn-salir-admin" style="color: #ef4444;"><i class="bx bx-log-out"></i> Salir</button></li>
+            </ul>
+        </nav>
+
+        <main id="admin-content">
+        </main>
+    </div>
+
+    <div id="cliente-container" style="display: none;">
+        <header>
+            <h2><i class="bx bx-radar" style="color: var(--primary);"></i> Portal del Cliente</h2>
+            <button id="btn-salir-cliente"><i class="bx bx-log-out"></i> Salir</button>
+        </header>
+
+        <main id="cliente-content">
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('btn-toggle-sidebar').addEventListener('click', function() {
+            const sidebar = document.getElementById('admin-sidebar');
+            sidebar.classList.toggle('colapsado');
+            
+            // Si se colapsa, cerramos los submenús automáticamente
+            if (sidebar.classList.contains('colapsado')) {
+                const submenus = ['submenu-clientes', 'submenu-categorias'];
+                const iconos = ['icono-flecha-clientes', 'icono-flecha-categorias'];
+                
+                submenus.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.display = 'none';
+                });
+                
+                iconos.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.style.transform = 'rotate(0deg)';
+                });
+            }
+        });
+    </script>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="config.js"></script>
+<script src="inicio.js"></script>
+<script src="bienvenida.js"></script>
+<script src="modal.js"></script>
+<script src="ortografia.js"></script>
+<script src="guia.js"></script>
+<script src="bandeja_modal.js"></script>
+<script src="cuentas.js"></script>
+
+<script src="selector_bandejas.js"></script>
+<script src="bandeja_general.js"></script>
+
+<script src="lista_categorias.js"></script> 
+<script src="agregar_categorias.js"></script> 
+<script src="lista_clientes.js"></script>
+<script src="agregar_trabajadores.js"></script>
+<script src="papelera.js"></script>
+<script src="user.js"></script>
+<script src="log_admin.js"></script>
+<script src="filtros_admin.js"></script>
+<script src="particles_login.js"></script>
+
+</body>
+</html>
